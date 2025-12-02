@@ -18,8 +18,11 @@ import {
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import ReviewSection from "@/components/ReviewSection";
 import { Button } from "@/components/ui/button";
-import { hotels, Hotel, Room } from "@/data/hotels";
+import { hotels } from "@/data/hotels";
+import { getHotelReviews } from "@/data/reviews";
+import type { Room } from "@/data/hotels";
 
 const HotelDetail = () => {
   const { id } = useParams();
@@ -66,30 +69,8 @@ const HotelDetail = () => {
     navigate(`/booking/${hotel.id}/${room.id}`);
   };
 
-  // Mock reviews
-  const reviews = [
-    {
-      id: 1,
-      name: "สมชาย ใจดี",
-      rating: 9.5,
-      date: "พ.ย. 2024",
-      comment: "ที่พักสวยมาก บริการดีเยี่ยม วิวทะเลสุดยอด จะกลับมาพักอีกแน่นอน",
-    },
-    {
-      id: 2,
-      name: "วรรณา มาลัย",
-      rating: 9.0,
-      date: "ต.ค. 2024",
-      comment: "ห้องสะอาด อาหารเช้าอร่อย พนักงานเป็นกันเอง",
-    },
-    {
-      id: 3,
-      name: "ธนา รุ่งเรือง",
-      rating: 9.8,
-      date: "ก.ย. 2024",
-      comment: "สุดยอดมาก ดีกว่าที่คาดไว้อีก แนะนำเลยครับ",
-    },
-  ];
+  // Get reviews for this hotel
+  const reviews = getHotelReviews(hotel.id);
 
   return (
     <div className="min-h-screen bg-background">
@@ -286,33 +267,12 @@ const HotelDetail = () => {
               </div>
 
               {/* Reviews */}
-              <div>
-                <h2 className="font-display text-2xl font-semibold mb-4">
-                  รีวิวจากผู้เข้าพัก
-                </h2>
-                <div className="space-y-4">
-                  {reviews.map((review) => (
-                    <div
-                      key={review.id}
-                      className="bg-card rounded-xl p-6 shadow-soft"
-                    >
-                      <div className="flex items-start justify-between mb-3">
-                        <div>
-                          <h4 className="font-semibold">{review.name}</h4>
-                          <span className="text-sm text-muted-foreground">
-                            {review.date}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-1 bg-primary text-primary-foreground px-2 py-1 rounded">
-                          <Star className="w-4 h-4 fill-accent text-accent" />
-                          {review.rating}
-                        </div>
-                      </div>
-                      <p className="text-muted-foreground">{review.comment}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <ReviewSection
+                hotelId={hotel.id}
+                hotelRating={hotel.rating}
+                reviewCount={hotel.reviewCount}
+                initialReviews={reviews}
+              />
             </div>
 
             {/* Sidebar */}
